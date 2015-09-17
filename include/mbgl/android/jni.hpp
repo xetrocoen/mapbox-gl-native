@@ -100,6 +100,14 @@ extern jclass httpRequestClass;
 extern jmethodID httpRequestStartId;
 extern jmethodID httpRequestCancelId;
 
+extern jclass imageReaderClass;
+extern jmethodID imageReaderConstructorId;
+extern jmethodID imageReaderGetWidthId;
+extern jmethodID imageReaderGetHeightId;
+extern jmethodID imageReaderHasAlphaId;
+extern jmethodID imageReaderPremultipliedAlphaId;
+extern jmethodID imageReaderReadId;
+
 extern bool throw_jni_error(JNIEnv *env, const char *msg);
 extern bool attach_jni_thread(JavaVM* vm, JNIEnv** env, std::string threadName);
 extern void detach_jni_thread(JavaVM* vm, JNIEnv** env, bool detach);

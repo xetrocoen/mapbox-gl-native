@@ -107,6 +107,14 @@ jclass httpRequestClass = nullptr;
 jmethodID httpRequestStartId = nullptr;
 jmethodID httpRequestCancelId = nullptr;
 
+jclass imageReaderClass = nullptr;
+jmethodID imageReaderConstructorId = nullptr;
+jmethodID imageReaderGetWidthId = nullptr;
+jmethodID imageReaderGetHeightId = nullptr;
+jmethodID imageReaderHasAlphaId = nullptr;
+jmethodID imageReaderPremultipliedAlphaId = nullptr;
+jmethodID imageReaderReadId = nullptr;
+
 bool throw_jni_error(JNIEnv *env, const char *msg) {
     if (env->ThrowNew(runtimeExceptionClass, msg) < 0) {
         env->ExceptionDescribe();
@@ -1605,6 +1613,48 @@ extern "C" JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
         env->ExceptionDescribe();
     }
 
+    imageReaderClass = env->FindClass("com/mapbox/mapboxgl/image/ImageReader");
+    if (imageReaderClass == nullptr) {
+        env->ExceptionDescribe();
+        return JNI_ERR;
+    }
+
+    imageReaderConstructorId = env->GetMethodID(imageReaderClass, "<init>", "([B)V");
+    if (imageReaderConstructorId == nullptr) {
+        env->ExceptionDescribe();
+        return JNI_ERR;
+    }
+
+    imageReaderGetWidthId = env->GetMethodID(imageReaderClass, "getWidth", "()I");
+    if (imageReaderGetWidthId == nullptr) {
+        env->ExceptionDescribe();
+        return JNI_ERR;
+    }
+
+    imageReaderGetHeightId = env->GetMethodID(imageReaderClass, "getHeight", "()I");
+    if (imageReaderGetHeightId == nullptr) {
+        env->ExceptionDescribe();
+        return JNI_ERR;
+    }
+
+    imageReaderHasAlphaId = env->GetMethodID(imageReaderClass, "hasAlpha", "()Z");
+    if (imageReaderHasAlphaId == nullptr) {
+        env->ExceptionDescribe();
+        return JNI_ERR;
+    }
+
+    imageReaderPremultipliedAlphaId = env->GetMethodID(imageReaderClass, "premultipliedAlpha", "()Z");
+    if (imageReaderPremultipliedAlphaId == nullptr) {
+        env->ExceptionDescribe();
+        return JNI_ERR;
+    }
+
+    imageReaderReadId = env->GetMethodID(imageReaderClass, "read", "(IIII)[I]");
+    if (imageReaderReadId == nullptr) {
+        env->ExceptionDescribe();
+        return JNI_ERR;
+    }
+
     const std::vector<JNINativeMethod> methods = {
         {"nativeCreate", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;FIJ)J",
          reinterpret_cast<void *>(&nativeCreate)},
@@ -1881,6 +1931,24 @@ extern "C" JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
         env->DeleteGlobalRef(httpContextClass);
     }
 
+    imageReaderClass = reinterpret_cast<jclass>(env->NewGlobalRef(imageReaderClass));
+    if (imageReaderClass == nullptr) {
+        env->ExceptionDescribe();
+        env->DeleteGlobalRef(latLngClass);
+        env->DeleteGlobalRef(markerClass);
+        env->DeleteGlobalRef(latLngZoomClass);
+        env->DeleteGlobalRef(bboxClass);
+        env->DeleteGlobalRef(polylineClass);
+        env->DeleteGlobalRef(polygonClass);
+        env->DeleteGlobalRef(runtimeExceptionClass);
+        env->DeleteGlobalRef(nullPointerExceptionClass);
+        env->DeleteGlobalRef(arrayListClass);
+        env->DeleteGlobalRef(projectedMetersClass);
+        env->DeleteGlobalRef(pointFClass);
+        env->DeleteGlobalRef(httpContextClass);
+        env->DeleteGlobalRef(httpRequestClass);
+    }
+
     char release[PROP_VALUE_MAX] = "";
     __system_property_get("ro.build.version.release", release);
     androidRelease = std::string(release);
@@ -1983,6 +2051,14 @@ extern "C" JNIEXPORT void JNICALL JNI_OnUnload(JavaVM *vm, void *reserved) {
     env->DeleteGlobalRef(httpRequestClass);
     httpRequestStartId = nullptr;
     httpRequestCancelId = nullptr;
+
+    env->DeleteGlobalRef(imageReaderClass);
+    imageReaderConstructorId = nullptr;
+    imageReaderGetWidthId = nullptr;
+    imageReaderGetHeightId = nullptr;
+    imageReaderHasAlphaId = nullptr;
+    imageReaderPremultipliedAlphaId = nullptr;
+    imageReaderReadId = nullptr;
 
     theJVM = nullptr;
 }
