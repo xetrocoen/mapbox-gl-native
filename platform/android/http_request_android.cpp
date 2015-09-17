@@ -157,12 +157,12 @@ HTTPAndroidRequest::HTTPAndroidRequest(HTTPAndroidContext* context_, const Resou
     jstring modified = mbgl::android::std_string_to_jstring(env, modifiedStr);
     obj = env->CallObjectMethod(context->obj, mbgl::android::httpContextCreateRequestId, reinterpret_cast<jlong>(this), resourceUrl, userAgent, etag, modified);
     if (env->ExceptionCheck() || (obj == nullptr)) {
-      env->ExceptionDescribe();
+        env->ExceptionDescribe();
     }
 
     obj = env->NewGlobalRef(obj);
     if (obj == nullptr) {
-      env->ExceptionDescribe();
+        env->ExceptionDescribe();
     }
 
     mbgl::android::detach_jni_thread(context->vm, &env, detach);
@@ -207,7 +207,7 @@ void HTTPAndroidRequest::start() {
 
     env->CallVoidMethod(obj, mbgl::android::httpRequestStartId);
     if (env->ExceptionCheck()) {
-      env->ExceptionDescribe();
+        env->ExceptionDescribe();
     }
 
     mbgl::android::detach_jni_thread(context->vm, &env, detach);
@@ -361,9 +361,9 @@ void JNICALL nativeOnResponse(JNIEnv *env, jobject obj, jlong nativePtr, jint co
     if (expires != nullptr) {
         expiresStr = mbgl::android::std_string_from_jstring(env, expires);
     }
-    jbyte* bodyData = env->GetByteArrayElements(body, nullptr);
+    jbyte* bodyData = env->GetByteArrayElements(body, nullptr); //  TODO error check
     std::string bodyStr(reinterpret_cast<char*>(bodyData), env->GetArrayLength(body));
-    env->ReleaseByteArrayElements(body, bodyData, JNI_ABORT);
+    env->ReleaseByteArrayElements(body, bodyData, JNI_ABORT); // TODO error check
     return request->onResponse(code, messageStr, etagStr, modifiedStr, cacheControlStr, expiresStr, bodyStr);
 }
 

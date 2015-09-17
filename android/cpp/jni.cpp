@@ -972,7 +972,7 @@ void JNICALL nativeRemoveAnnotations(JNIEnv *env, jobject obj, jlong nativeMapVi
     }
 
     ids.reserve(len);
-    jlong* jids = env->GetLongArrayElements(jarray, nullptr);
+    jlong* jids = env->GetLongArrayElements(jarray, nullptr); // TODO error check
 
     for (jsize i = 0; i < len; i++) {
         if(jids[i] == -1L)
@@ -980,7 +980,7 @@ void JNICALL nativeRemoveAnnotations(JNIEnv *env, jobject obj, jlong nativeMapVi
         ids.push_back(static_cast<uint32_t>(jids[i]));
     }
 
-    env->ReleaseLongArrayElements(jarray, jids, JNI_ABORT);
+    env->ReleaseLongArrayElements(jarray, jids, JNI_ABORT); //  TODO error check
 
     nativeMapView->getMap().removeAnnotations(ids);
 }
@@ -1037,9 +1037,9 @@ void JNICALL nativeSetSprite(JNIEnv *env, jobject obj, jlong nativeMapViewPtr,
 
     const std::string symbolName = std_string_from_jstring(env, symbol);
 
-    jbyte* pixelData = env->GetByteArrayElements(jpixels, nullptr);
+    jbyte* pixelData = env->GetByteArrayElements(jpixels, nullptr); // TODO error check
     std::string pixels(reinterpret_cast<char*>(pixelData), width * height * 4);
-    env->ReleaseByteArrayElements(jpixels, pixelData, JNI_ABORT);
+    env->ReleaseByteArrayElements(jpixels, pixelData, JNI_ABORT); // TODO error check
 
     auto spriteImage = std::make_shared<mbgl::SpriteImage>(
         uint16_t(width),
