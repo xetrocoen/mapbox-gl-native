@@ -14,29 +14,20 @@
         '../platform/android/asset_root.cpp',
         '../platform/default/thread.cpp',
         '../platform/default/string_stdlib.cpp',
-        '../platform/default/image.cpp',
-        '../platform/default/image_reader.cpp',
-        '../platform/default/png_reader.cpp',
-        '../platform/default/jpeg_reader.cpp',
+        '../platform/android/android_image_reader.cpp'
       ],
 
       'variables': {
         'cflags_cc': [
-          '<@(libpng_cflags)',
-          '<@(jpeg_cflags)',
           '<@(libuv_cflags)',
           '<@(nunicode_cflags)',
           '<@(boost_cflags)',
         ],
         'ldflags': [
-          '<@(libpng_ldflags)',
-          '<@(jpeg_ldflags)',
           '<@(libuv_ldflags)',
           '<@(nunicode_ldflags)',
         ],
         'libraries': [
-          '<@(libpng_static_libs)',
-          '<@(jpeg_static_libs)',
           '<@(libuv_static_libs)',
           '<@(nunicode_static_libs)',
         ],
