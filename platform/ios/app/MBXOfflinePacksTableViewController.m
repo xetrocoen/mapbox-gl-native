@@ -114,6 +114,7 @@ static NSString * const MBXOfflinePacksTableViewActiveCellReuseIdentifier = @"Ac
                 [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
                 [self presentViewController:alertController animated:YES completion:nil];
             } else {
+                self.startTime = [NSDate date];
                 [pack resume];
             }
         }];
@@ -124,6 +125,72 @@ static NSString * const MBXOfflinePacksTableViewActiveCellReuseIdentifier = @"Ac
     }
     
     [self presentViewController:alertController animated:YES completion:nil];
+}
+
+- (IBAction)startBenchmark:(id)sender {
+    self.iterations = 0;
+    self.totalSeconds = 0;
+    self.totalBytes = 0;
+    //[self deleteStaleBenchmarkPacks];
+    [self downloadBenchmarkRegion];
+}
+
+- (void)downloadBenchmarkRegion {
+    MGLMapView *mapView = self.mapView;
+    mapView.visibleCoordinateBounds = MGLCoordinateBoundsMake(CLLocationCoordinate2DMake(40.7, -74.01), CLLocationCoordinate2DMake(40.71, -74));
+    NSAssert(mapView, @"No map view to get the current region from.");
+
+    NSString *iterationString = self.iterations > 0 ? [NSString stringWithFormat:@"Bench: %lu", (unsigned long)self.iterations] : @"Bench: initial download";
+
+    MGLTilePyramidOfflineRegion *region = [[MGLTilePyramidOfflineRegion alloc] initWithStyleURL:mapView.styleURL bounds:mapView.visibleCoordinateBounds fromZoomLevel:mapView.zoomLevel toZoomLevel:mapView.maximumZoomLevel];
+    NSData *context = [NSKeyedArchiver archivedDataWithRootObject:@{
+        MBXOfflinePackContextNameKey: iterationString,
+    }];
+
+    [[MGLOfflineStorage sharedOfflineStorage] addPackForRegion:region withContext:context completionHandler:^(MGLOfflinePack *pack, NSError *error) {
+        if (error) {
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Benchmark failed." message:nil preferredStyle:UIAlertControllerStyleAlert];
+            [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
+            [self presentViewController:alertController animated:YES completion:nil];
+        } else {
+            self.startTime = [NSDate date];
+            [pack resume];
+        }
+    }];
+}
+
+- (void)benchmarkDownloadFinished:(MGLOfflinePack *)pack {
+    NSDate *endTime = [NSDate date];
+    NSTimeInterval executionTime = [endTime timeIntervalSinceDate:self.startTime];
+
+    NSString *diskSpeedString = [NSByteCountFormatter stringFromByteCount:pack.progress.countOfBytesCompleted / executionTime
+                                                               countStyle:NSByteCountFormatterCountStyleFile];
+    if (self.iterations > 0) {
+        self.totalSeconds += executionTime;
+        self.totalBytes += pack.progress.countOfBytesCompleted;
+    }
+
+    NSLog(@"Iteration %lu: %.2fs   %@/s", (unsigned long)self.iterations, executionTime, diskSpeedString);
+    self.startTime = nil;
+
+    if (self.iterations < 5) {
+        self.iterations++;
+        [self downloadBenchmarkRegion];
+    } else {
+        NSTimeInterval averageExecutionTime = self.totalSeconds / 5;
+        NSUInteger averageDiskSpeed = self.totalBytes / self.totalSeconds;
+        NSString *averageDiskSpeedString = [NSByteCountFormatter stringFromByteCount:averageDiskSpeed
+                                                                          countStyle:NSByteCountFormatterCountStyleFile];
+        NSLog(@"Finished benchmark: %.2fs, %@/s", averageExecutionTime, averageDiskSpeedString);
+    }
+}
+
+- (void)deleteStaleBenchmarkPacks {
+    for (MGLOfflinePack *pack in [MGLOfflineStorage sharedOfflineStorage].packs) {
+        if ([pack.name containsString:@"Bench"]) {
+            [[MGLOfflineStorage sharedOfflineStorage] removePack:pack withCompletionHandler:nil];
+        }
+    }
 }
 
 #pragma mark - Table view data source
@@ -233,6 +300,10 @@ static NSString * const MBXOfflinePacksTableViewActiveCellReuseIdentifier = @"Ac
     NSUInteger index = [[MGLOfflineStorage sharedOfflineStorage].packs indexOfObject:pack];
     if (index == NSNotFound) {
         return;
+    }
+
+    if (pack.state == MGLOfflinePackStateComplete && [pack.name containsString:@"Bench"]) {
+        [self benchmarkDownloadFinished:pack];
     }
     
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
