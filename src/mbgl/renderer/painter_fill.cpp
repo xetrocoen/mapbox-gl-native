@@ -69,7 +69,7 @@ void Painter::renderFill(PaintParameters& parameters,
             // the (non-antialiased) fill.
             setDepthSublayer(0); // OK
         }
-        bucket.drawVertices(outlineShader, store, isOverdraw());
+        bucket.drawVertices(outlineShader, store, config, isOverdraw());
     }
 
     if (pattern) {
@@ -103,7 +103,7 @@ void Painter::renderFill(PaintParameters& parameters,
 
             // Draw the actual triangles into the color & stencil buffer.
             setDepthSublayer(0);
-            bucket.drawElements(patternShader, store, isOverdraw());
+            bucket.drawElements(patternShader, store, config, isOverdraw());
 
             if (properties.fillAntialias && !isOutlineColorDefined) {
                 config.program = outlinePatternShader.getID();
@@ -130,7 +130,7 @@ void Painter::renderFill(PaintParameters& parameters,
                 spriteAtlas->bind(true, store, config, 0);
 
                 setDepthSublayer(2);
-                bucket.drawVertices(outlinePatternShader, store, isOverdraw());
+                bucket.drawVertices(outlinePatternShader, store, config, isOverdraw());
             }
         }
     } else {
@@ -147,7 +147,7 @@ void Painter::renderFill(PaintParameters& parameters,
 
             // Draw the actual triangles into the color & stencil buffer.
             setDepthSublayer(1);
-            bucket.drawElements(plainShader, store, isOverdraw());
+            bucket.drawElements(plainShader, store, config, isOverdraw());
         }
     }
 
@@ -164,7 +164,7 @@ void Painter::renderFill(PaintParameters& parameters,
         outlineShader.u_world = worldSize;
 
         setDepthSublayer(2);
-        bucket.drawVertices(outlineShader, store, isOverdraw());
+        bucket.drawVertices(outlineShader, store, config, isOverdraw());
     }
 }
 

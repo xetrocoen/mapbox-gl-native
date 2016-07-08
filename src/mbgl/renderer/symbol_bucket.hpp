@@ -82,10 +82,10 @@ public:
                      GlyphAtlas&,
                      GlyphStore&);
 
-    void drawGlyphs(SDFShader&, gl::ObjectStore&, bool overdraw);
-    void drawIcons(SDFShader&, gl::ObjectStore&, bool overdraw);
-    void drawIcons(IconShader&, gl::ObjectStore&, bool overdraw);
-    void drawCollisionBoxes(CollisionBoxShader&, gl::ObjectStore&);
+    void drawGlyphs(SDFShader&, gl::ObjectStore&, gl::Config&, bool overdraw);
+    void drawIcons(SDFShader&, gl::ObjectStore&, gl::Config&, bool overdraw);
+    void drawIcons(IconShader&, gl::ObjectStore&, gl::Config&, bool overdraw);
+    void drawCollisionBoxes(CollisionBoxShader&, gl::ObjectStore&, gl::Config&);
 
     void parseFeatures(const GeometryTileLayer&, const style::Filter&);
     bool needsDependencies(GlyphStore&, SpriteStore&);

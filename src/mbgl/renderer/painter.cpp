@@ -99,9 +99,9 @@ void Painter::render(const Style& style, const FrameData& frame_, SpriteAtlas& a
     {
         MBGL_DEBUG_GROUP("upload");
 
-        tileStencilBuffer.upload(store);
-        rasterBoundsBuffer.upload(store);
-        tileBorderBuffer.upload(store);
+        tileStencilBuffer.upload(store, config);
+        rasterBoundsBuffer.upload(store, config);
+        tileBorderBuffer.upload(store, config);
         spriteAtlas->upload(store, config, 0);
         lineAtlas->upload(store, config, 0);
         glyphAtlas->upload(store, config, 0);

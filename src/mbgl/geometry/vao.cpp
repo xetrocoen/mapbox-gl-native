@@ -15,7 +15,7 @@ VertexArrayObject::VertexArrayObject() {
 
 VertexArrayObject::~VertexArrayObject() = default;
 
-void VertexArrayObject::bindVertexArrayObject(gl::ObjectStore& store) {
+void VertexArrayObject::bindVertexArrayObject(gl::ObjectStore& store, gl::Config& config) {
     if (!gl::GenVertexArrays || !gl::BindVertexArray) {
         static bool reported = false;
         if (!reported) {
@@ -27,8 +27,11 @@ void VertexArrayObject::bindVertexArrayObject(gl::ObjectStore& store) {
 
     if (!vao) {
         vao = store.createVAO();
+        config.vertexBuffer.setDirty();
+        config.elementBuffer.setDirty();
     }
-    MBGL_CHECK_ERROR(gl::BindVertexArray(*vao));
+
+    config.vertexArrayObject = *vao;
 }
 
 void VertexArrayObject::verifyBinding(Shader& shader, GLuint vertexBuffer, GLuint elementsBuffer,
