@@ -34,8 +34,8 @@ if [ "$MASON_PLATFORM" == "osx" ]; then
     }
 else
     function print_opengl_flags {
-        CONFIG+="    'opengl_cflags%': $(quote_flags $(pkg-config gl x11 --cflags)),"$LN
-        CONFIG+="    'opengl_ldflags%': $(quote_flags $(pkg-config gl x11 --libs)),"$LN
+        CONFIG+="    'opengl_cflags%': $(quote_flags $(pkg-config gl egl x11 --cflags)),"$LN
+        CONFIG+="    'opengl_ldflags%': $(quote_flags $(pkg-config gl egl gbm libdrm x11 --libs)),"$LN
     }
 fi
 

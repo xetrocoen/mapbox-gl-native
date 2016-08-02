@@ -28,6 +28,6 @@ EARCUT_VERSION=0.11
 BENCHMARK_VERSION=1.0.0
 
 function print_opengl_flags {
-    CONFIG+="    'opengl_cflags%': $(quote_flags $(pkg-config gl x11 --cflags)),"$LN
-    CONFIG+="    'opengl_ldflags%': $(quote_flags $(pkg-config gl x11 --libs)),"$LN
+    CONFIG+="    'opengl_cflags%': $(quote_flags $(pkg-config gl egl x11 --cflags)),"$LN
+    CONFIG+="    'opengl_ldflags%': $(quote_flags $(pkg-config gl egl gbm libdrm x11 --libs)),"$LN
 }

@@ -257,8 +257,10 @@
             'platform/default/headless_view_egl.cpp',
           ],
 
+          'cflags_cc': [ '<@(opengl_cflags)' ],
+
           'link_settings': {
-            'libraries': [ '-lGL -lEGL -lgbm -ldrm' ],
+            'libraries': [ '<@(opengl_ldflags)' ],
           },
         }],
 
