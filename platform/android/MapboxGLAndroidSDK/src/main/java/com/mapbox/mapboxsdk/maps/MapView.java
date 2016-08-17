@@ -442,7 +442,7 @@ public class MapView extends FrameLayout {
         addOnMapChangedListener(new OnMapChangedListener() {
             @Override
             public void onMapChanged(@MapChange int change) {
-                if (change == WILL_START_RENDERING_MAP && mInitialLoad) {
+                if (change == DID_FINISH_LOADING_MAP && mInitialLoad) {
                     mInitialLoad = false;
                     reloadIcons();
                     reloadMarkers();
