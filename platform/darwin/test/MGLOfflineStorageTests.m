@@ -17,7 +17,7 @@
             NSKeyValueChange changeKind = [change[NSKeyValueChangeKindKey] unsignedIntegerValue];
             return changeKind = NSKeyValueChangeSetting;
         }];
-        
+        XCTAssertNil([MGLOfflineStorage sharedOfflineStorage].packs, @"Shared offline storage objects populated packs sooner than expected.");
         [self waitForExpectationsWithTimeout:1 handler:nil];
         
         XCTAssertNotNil([MGLOfflineStorage sharedOfflineStorage].packs, @"Shared offline storage object should have a non-nil collection of packs by this point.");
