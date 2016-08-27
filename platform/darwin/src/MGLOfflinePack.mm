@@ -43,7 +43,9 @@ private:
 
 @end
 
-@implementation MGLOfflinePack
+@implementation MGLOfflinePack {
+    BOOL _isSuspending;
+}
 
 - (instancetype)init {
     if (self = [super init]) {
@@ -93,6 +95,11 @@ private:
 - (void)suspend {
     MGLAssertOfflinePackIsValid();
     
+    if (self.state == MGLOfflinePackStateActive) {
+        self.state = MGLOfflinePackStateInactive;
+        _isSuspending = YES;
+    }
+    
     mbgl::DefaultFileSource *mbglFileSource = [[MGLOfflineStorage sharedOfflineStorage] mbglFileSource];
     mbglFileSource->setOfflineRegionDownloadState(*_mbglOfflineRegion, mbgl::OfflineRegionDownloadState::Inactive);
 }
@@ -117,7 +124,10 @@ private:
     
     NSAssert(_state != MGLOfflinePackStateInvalid, @"Cannot change the state of an invalid offline pack.");
     
-    _state = state;
+    if (!_isSuspending || state != MGLOfflinePackStateActive) {
+        _isSuspending = NO;
+        _state = state;
+    }
 }
 
 - (void)requestProgress {
@@ -148,6 +158,10 @@ private:
         case mbgl::OfflineRegionDownloadState::Active:
             self.state = MGLOfflinePackStateActive;
             break;
+    }
+    
+    if (_isSuspending) {
+        return;
     }
     
     MGLOfflinePackProgress progress;
