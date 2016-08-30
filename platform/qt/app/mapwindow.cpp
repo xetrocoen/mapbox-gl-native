@@ -105,13 +105,14 @@ void MapWindow::keyPressEvent(QKeyEvent *ev)
     case Qt::Key_Tab:
         m_map.cycleDebugOptions();
         break;
-    case Qt::Key_R:
-        if (m_map.hasClass("night")) {
-            m_map.removeClass("night", transition);
-        } else {
-            m_map.addClass("night", transition);
-        }
-        break;
+    case Qt::Key_R: {
+            m_map.setClassTransition(transition);
+            if (m_map.hasClass("night")) {
+                m_map.removeClass("night");
+            } else {
+                m_map.addClass("night");
+            }
+        } break;
     default:
         break;
     }
