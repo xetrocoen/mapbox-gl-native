@@ -50,7 +50,7 @@ public:
     // a tile is ready so observers can render the tile.
     void update(const UpdateParameters&);
 
-    void cascade(const TimePoint&, MapMode);
+    void cascade(const TimePoint&, MapMode, std::vector<std::string> classes = {}, const TransitionOptions& = {});
     void recalculate(float z, const TimePoint&, MapMode);
 
     bool hasTransitions() const;
@@ -75,12 +75,6 @@ public:
     double getDefaultBearing() const;
     double getDefaultPitch() const;
 
-    bool addClass(const std::string&, const TransitionOptions& = {});
-    bool removeClass(const std::string&, const TransitionOptions& = {});
-    bool hasClass(const std::string&) const;
-    void setClasses(const std::vector<std::string>&, const TransitionOptions& = {});
-    std::vector<std::string> getClasses() const;
-
     RenderData getRenderData(MapDebugOptions) const;
 
     std::vector<Feature> queryRenderedFeatures(const QueryParameters&) const;
@@ -102,8 +96,6 @@ public:
 private:
     std::vector<std::unique_ptr<Source>> sources;
     std::vector<std::unique_ptr<Layer>> layers;
-    std::vector<std::string> classes;
-    optional<TransitionOptions> transitionProperties;
 
     // Defaults
     std::string name;

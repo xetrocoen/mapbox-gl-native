@@ -15,9 +15,10 @@ TEST(Style, UnusedSource) {
     Style style { fileSource, 1.0 };
 
     auto now = Clock::now();
+    std::vector<std::string> classes;
 
     style.setJSON(util::read_file("test/fixtures/resources/style-unused-sources.json"));
-    style.cascade(now, MapMode::Still);
+    style.cascade(now, MapMode::Still, classes);
     style.recalculate(0, now, MapMode::Still);
 
     Source *usedSource = style.getSource("usedsource");
@@ -36,12 +37,11 @@ TEST(Style, UnusedSourceActiveViaClassUpdate) {
     Style style { fileSource, 1.0 };
 
     style.setJSON(util::read_file("test/fixtures/resources/style-unused-sources.json"));
-    EXPECT_TRUE(style.addClass("visible"));
-    EXPECT_TRUE(style.hasClass("visible"));
 
     auto now = Clock::now();
+    std::vector<std::string> classes = { "visible" };
 
-    style.cascade(now, MapMode::Still);
+    style.cascade(now, MapMode::Still, classes);
     style.recalculate(0, now, MapMode::Still);
 
     Source *unusedSource = style.getSource("unusedsource");
@@ -50,11 +50,11 @@ TEST(Style, UnusedSourceActiveViaClassUpdate) {
 
     // Style classes should be cleared upon new style load.
     style.setJSON(util::read_file("test/fixtures/resources/style-unused-sources.json"));
-    EXPECT_FALSE(style.hasClass("visible"));
 
     now = Clock::now();
+    classes.clear();
 
-    style.cascade(now, MapMode::Still);
+    style.cascade(now, MapMode::Still, classes);
     style.recalculate(0, now, MapMode::Still);
 
     unusedSource = style.getSource("unusedsource");

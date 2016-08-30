@@ -54,40 +54,9 @@ Style::~Style() {
     spriteStore->setObserver(nullptr);
 }
 
-bool Style::addClass(const std::string& className, const TransitionOptions& properties) {
-    if (hasClass(className)) return false;
-    classes.push_back(className);
-    transitionProperties = properties;
-    return true;
-}
-
-bool Style::hasClass(const std::string& className) const {
-    return std::find(classes.begin(), classes.end(), className) != classes.end();
-}
-
-bool Style::removeClass(const std::string& className, const TransitionOptions& properties) {
-    const auto it = std::find(classes.begin(), classes.end(), className);
-    if (it != classes.end()) {
-        classes.erase(it);
-        transitionProperties = properties;
-        return true;
-    }
-    return false;
-}
-
-void Style::setClasses(const std::vector<std::string>& classNames, const TransitionOptions& properties) {
-    classes = classNames;
-    transitionProperties = properties;
-}
-
-std::vector<std::string> Style::getClasses() const {
-    return classes;
-}
-
 void Style::setJSON(const std::string& json) {
     sources.clear();
     layers.clear();
-    classes.clear();
 
     Parser parser;
     auto error = parser.parse(json);
@@ -213,7 +182,7 @@ void Style::update(const UpdateParameters& parameters) {
     }
 }
 
-void Style::cascade(const TimePoint& timePoint, MapMode mode) {
+void Style::cascade(const TimePoint& timePoint, MapMode mode, std::vector<std::string> classes, const TransitionOptions& classTransitionOptions) {
     // When in continuous mode, we can either have user- or style-defined
     // transitions. Still mode is always immediate.
     static const TransitionOptions immediateTransition {};
@@ -228,10 +197,8 @@ void Style::cascade(const TimePoint& timePoint, MapMode mode) {
     const CascadeParameters parameters {
         classIDs,
         mode == MapMode::Continuous ? timePoint : Clock::time_point::max(),
-        mode == MapMode::Continuous ? transitionProperties.value_or(immediateTransition) : immediateTransition
+        mode == MapMode::Continuous ? classTransitionOptions : immediateTransition
     };
-
-    transitionProperties = {};
 
     for (const auto& layer : layers) {
         layer->baseImpl->cascade(parameters);

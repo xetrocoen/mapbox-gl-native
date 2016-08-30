@@ -70,6 +70,9 @@ public:
     std::string styleJSON;
     bool styleMutated = false;
 
+    std::vector<std::string> classes;
+    style::TransitionOptions classTransitionOptions;
+
     std::unique_ptr<AsyncRequest> styleRequest;
 
     Map::StillImageCallback callback;
@@ -218,7 +221,7 @@ void Map::Impl::update() {
     }
 
     if (updateFlags & Update::Classes) {
-        style->cascade(timePoint, mode);
+        style->cascade(timePoint, mode, classes, classTransitionOptions);
     }
 
     if (updateFlags & Update::Classes || updateFlags & Update::RecalculateStyle) {
@@ -351,7 +354,7 @@ void Map::Impl::loadStyleJSON(const std::string& json) {
     styleJSON = json;
 
     // force style cascade, causing all pending transitions to complete.
-    style->cascade(Clock::now(), mode);
+    style->cascade(Clock::now(), mode, classes, classTransitionOptions);
 
     updateFlags |= Update::Classes | Update::RecalculateStyle | Update::AnnotationStyle;
     asyncUpdate.send();
@@ -865,29 +868,38 @@ bool Map::isFullyLoaded() const {
     return impl->style->isLoaded();
 }
 
-void Map::addClass(const std::string& className, const TransitionOptions& properties) {
-    if (impl->style->addClass(className, properties)) {
+void Map::addClass(const std::string& className) {
+    if (hasClass(className)) {
+        return;
+    }
+
+    impl->classes.push_back(className);
+    update(Update::Classes);
+}
+
+void Map::removeClass(const std::string& className) {
+    const auto it = std::find(impl->classes.begin(), impl->classes.end(), className);
+    if (it != impl->classes.end()) {
+        impl->classes.erase(it);
         update(Update::Classes);
     }
 }
 
-void Map::removeClass(const std::string& className, const TransitionOptions& properties) {
-    if (impl->style->removeClass(className, properties)) {
-        update(Update::Classes);
-    }
-}
-
-void Map::setClasses(const std::vector<std::string>& classNames, const TransitionOptions& properties) {
-    impl->style->setClasses(classNames, properties);
+void Map::setClasses(const std::vector<std::string>& classNames) {
+    impl->classes = classNames;
     update(Update::Classes);
 }
 
 bool Map::hasClass(const std::string& className) const {
-    return impl->style->hasClass(className);
+    return std::find(impl->classes.begin(), impl->classes.end(), className) != impl->classes.end();
 }
 
 std::vector<std::string> Map::getClasses() const {
-    return impl->style->getClasses();
+    return impl->classes;
+}
+
+void Map::setClassTransition(const TransitionOptions& options) {
+    impl->classTransitionOptions = options;
 }
 
 void Map::setSourceTileCacheSize(size_t size) {
