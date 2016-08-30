@@ -53,17 +53,17 @@ public:
 class Q_DECL_EXPORT QQuickMapboxGLPaintStyleProperty : public QQuickMapboxGLStyleProperty
 {
     Q_OBJECT
-    Q_PROPERTY(QString styleClass READ styleClass WRITE setStyleClass NOTIFY classChanged)
+    Q_PROPERTY(QString classes READ classes WRITE setClasses NOTIFY classesChanged)
 
 public:
     QQuickMapboxGLPaintStyleProperty(QQuickItem *parent = 0);
     virtual ~QQuickMapboxGLPaintStyleProperty() {}
 
-    void setStyleClass(const QString &);
-    QString styleClass() const;
+    void setClasses(const QString &);
+    QString classes() const;
 
 signals:
-    void classChanged(const QString &);
+    void classesChanged(const QString &);
 };
 
 #endif // QQUICKMAPBOXGLSTYLEPROPERTY_H

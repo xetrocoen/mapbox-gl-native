@@ -209,6 +209,25 @@ QQuickMapboxGLStyle *QQuickMapboxGL::style() const
     return m_style;
 }
 
+void QQuickMapboxGL::setClasses(const QString &classes)
+{
+    if (m_classes == classes) {
+        return;
+    }
+
+    m_classes = classes;
+
+    m_syncState |= ClassNeedsSync;
+    update();
+
+    emit classesChanged(m_classes);
+}
+
+QString QQuickMapboxGL::classes() const
+{
+    return m_classes;
+}
+
 void QQuickMapboxGL::setBearing(qreal angle)
 {
     angle = std::fmod(angle, 360.);

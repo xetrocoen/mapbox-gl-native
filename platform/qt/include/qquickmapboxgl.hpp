@@ -32,6 +32,7 @@ class Q_DECL_EXPORT QQuickMapboxGL : public QQuickFramebufferObject
 
     // MapboxGL QML Type interface.
     Q_PROPERTY(QQuickMapboxGLStyle *style READ style WRITE setStyle NOTIFY styleChanged)
+    Q_PROPERTY(QString classes READ classes WRITE setClasses NOTIFY classesChanged)
     Q_PROPERTY(qreal bearing READ bearing WRITE setBearing NOTIFY bearingChanged)
     Q_PROPERTY(qreal pitch READ pitch WRITE setPitch NOTIFY pitchChanged)
 
@@ -78,6 +79,9 @@ public:
     void setStyle(QQuickMapboxGLStyle *);
     QQuickMapboxGLStyle* style() const;
 
+    void setClasses(const QString &);
+    QString classes() const;
+
     void setBearing(qreal bearing);
     qreal bearing() const;
 
@@ -94,6 +98,7 @@ public:
         PanNeedsSync     = 1 << 3,
         BearingNeedsSync = 1 << 4,
         PitchNeedsSync   = 1 << 5,
+        ClassNeedsSync   = 1 << 6,
     };
 
     int swapSyncState();
@@ -116,6 +121,7 @@ signals:
     void colorChanged(const QColor &color);
 
     void styleChanged();
+    void classesChanged(const QString &);
     void bearingChanged(qreal angle);
     void pitchChanged(qreal angle);
 
@@ -140,6 +146,7 @@ private:
     QList<QVariantMap> m_paintChanges;
 
     QQuickMapboxGLStyle *m_style = 0;
+    QString m_classes;
     qreal m_bearing = 0;
     qreal m_pitch = 0;
 

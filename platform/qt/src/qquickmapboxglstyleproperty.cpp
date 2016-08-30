@@ -66,20 +66,20 @@ QVariant QQuickMapboxGLStyleProperty::value() const
     return m_map.value("value");
 }
 
-void QQuickMapboxGLPaintStyleProperty::setStyleClass(const QString &styleClass)
+void QQuickMapboxGLPaintStyleProperty::setClasses(const QString &classes)
 {
-    if (m_map.value("class").toString() == styleClass) {
+    if (m_map.value("classes").toString() == classes) {
         return;
     }
 
-    m_map["class"] = styleClass;
-    emit classChanged(styleClass);
+    m_map["classes"] = classes;
+    emit classesChanged(classes);
     checkUpdated();
 }
 
-QString QQuickMapboxGLPaintStyleProperty::styleClass() const
+QString QQuickMapboxGLPaintStyleProperty::classes() const
 {
-    return m_map.value("class").toString();
+    return m_map.value("classes").toString();
 }
 
 // QQuickMapboxGLLayoutStyleProperty

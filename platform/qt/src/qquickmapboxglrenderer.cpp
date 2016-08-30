@@ -89,6 +89,10 @@ void QQuickMapboxGLRenderer::synchronize(QQuickFramebufferObject *item)
         m_styleLoaded = false;
     }
 
+    if (syncStatus & QQuickMapboxGL::ClassNeedsSync) {
+        m_map->setClasses(quickMap->classes().split(" ", QString::SkipEmptyParts));
+    }
+
     if (syncStatus & QQuickMapboxGL::PanNeedsSync) {
         m_map->moveBy(quickMap->swapPan());
         emit centerChanged(QGeoCoordinate(m_map->latitude(), m_map->longitude()));
@@ -112,7 +116,7 @@ void QQuickMapboxGLRenderer::synchronize(QQuickFramebufferObject *item)
 
         if (!quickMap->paintPropertyChanges().empty()) {
             for (const auto& change: quickMap->paintPropertyChanges()) {
-                m_map->setPaintProperty(change.value("layer").toString(), change.value("property").toString(), change.value("value"), change.value("class").toString());
+                m_map->setPaintProperty(change.value("layer").toString(), change.value("property").toString(), change.value("value"), change.value("classes").toString());
             }
             quickMap->paintPropertyChanges().clear();
         }

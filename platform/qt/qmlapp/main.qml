@@ -80,6 +80,8 @@ ApplicationWindow {
                         url: "mapbox://styles/mapbox/streets-v9"
                     }
 
+                    classes: "custom"
+
                     center: QtPositioning.coordinate(60.170448, 24.942046) // Helsinki
                     zoomLevel: 14
                     minimumZoomLevel: 0
@@ -95,6 +97,7 @@ ApplicationWindow {
                         id: waterColor
                         layer: "water"
                         property: "fill-color"
+                        classes: "custom"
                     }
 
                     Image {

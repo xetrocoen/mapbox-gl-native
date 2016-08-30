@@ -42,18 +42,3 @@ QString QQuickMapboxGLStyle::url() const
 {
     return m_url;
 }
-
-void QQuickMapboxGLStyle::setStyleClass(const QString &styleClass)
-{
-    if (styleClass == m_class) {
-        return;
-    }
-
-    m_class = styleClass;
-    emit classChanged(styleClass);
-}
-
-QString QQuickMapboxGLStyle::styleClass() const
-{
-    return m_class;
-}
