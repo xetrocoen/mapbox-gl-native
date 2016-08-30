@@ -1,5 +1,5 @@
 #include <QQuickMapboxGLStyle>
-#include <QQuickMapboxGLStyleProperty>
+#include <QQuickMapboxGLProperty>
 
 QQuickMapboxGLStyle::QQuickMapboxGLStyle(QQuickItem *parent)
     : QQuickItem(parent)
@@ -12,13 +12,13 @@ void QQuickMapboxGLStyle::itemChange(QQuickItem::ItemChange change, const QQuick
 
     switch (change) {
     case QQuickItem::ItemChildAddedChange:
-        if (QQuickMapboxGLStyleProperty *property = qobject_cast<QQuickMapboxGLStyleProperty *>(value.item)) {
+        if (QQuickMapboxGLProperty *property = qobject_cast<QQuickMapboxGLProperty *>(value.item)) {
             connect(property, SIGNAL(updated(QVariantMap)), this, SIGNAL(propertyUpdated(QVariantMap)));
             connect(this, SIGNAL(urlChanged(QString)), property, SLOT(checkUpdated()));
         }
         break;
     case QQuickItem::ItemChildRemovedChange:
-        if (QQuickMapboxGLStyleProperty *property = qobject_cast<QQuickMapboxGLStyleProperty *>(value.item)) {
+        if (QQuickMapboxGLProperty *property = qobject_cast<QQuickMapboxGLProperty *>(value.item)) {
             disconnect(property, SIGNAL(updated(QVariantMap)), this, SIGNAL(propertyUpdated(QVariantMap)));
             disconnect(this, SIGNAL(urlChanged(QString)), property, SLOT(checkUpdated()));
         }

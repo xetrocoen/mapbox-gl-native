@@ -130,7 +130,7 @@ public slots:
 
 private slots:
     void onStyleChanged();
-    void onStylePropertyUpdated(const QVariantMap &params);
+    void onPropertyUpdated(const QVariantMap &params);
 
 private:
     qreal m_minimumZoomLevel = 0;

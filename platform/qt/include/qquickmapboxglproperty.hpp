@@ -1,9 +1,9 @@
-#ifndef QQUICKMAPBOXGLSTYLEPROPERTY_H
-#define QQUICKMAPBOXGLSTYLEPROPERTY_H
+#ifndef QQUICKMAPBOXGLPROPERTY_H
+#define QQUICKMAPBOXGLPROPERTY_H
 
 #include <QQuickItem>
 
-class Q_DECL_EXPORT QQuickMapboxGLStyleProperty : public QQuickItem
+class Q_DECL_EXPORT QQuickMapboxGLProperty : public QQuickItem
 {
     Q_OBJECT
 
@@ -17,7 +17,7 @@ public:
         PaintType,
     };
 
-    virtual ~QQuickMapboxGLStyleProperty() {}
+    virtual ~QQuickMapboxGLProperty() {}
 
     void setLayer(const QString &);
     QString layer() const;
@@ -38,26 +38,26 @@ signals:
     void updated(const QVariantMap& params);
 
 protected:
-    QQuickMapboxGLStyleProperty(QQuickItem *parent, Type);
+    QQuickMapboxGLProperty(QQuickItem *parent, Type);
 
     QVariantMap m_map;
 };
 
-class Q_DECL_EXPORT QQuickMapboxGLLayoutStyleProperty : public QQuickMapboxGLStyleProperty
+class Q_DECL_EXPORT QQuickMapboxGLLayoutProperty : public QQuickMapboxGLProperty
 {
 public:
-    QQuickMapboxGLLayoutStyleProperty(QQuickItem *parent = 0);
-    virtual ~QQuickMapboxGLLayoutStyleProperty() {}
+    QQuickMapboxGLLayoutProperty(QQuickItem *parent = 0);
+    virtual ~QQuickMapboxGLLayoutProperty() {}
 };
 
-class Q_DECL_EXPORT QQuickMapboxGLPaintStyleProperty : public QQuickMapboxGLStyleProperty
+class Q_DECL_EXPORT QQuickMapboxGLPaintProperty : public QQuickMapboxGLProperty
 {
     Q_OBJECT
     Q_PROPERTY(QString classes READ classes WRITE setClasses NOTIFY classesChanged)
 
 public:
-    QQuickMapboxGLPaintStyleProperty(QQuickItem *parent = 0);
-    virtual ~QQuickMapboxGLPaintStyleProperty() {}
+    QQuickMapboxGLPaintProperty(QQuickItem *parent = 0);
+    virtual ~QQuickMapboxGLPaintProperty() {}
 
     void setClasses(const QString &);
     QString classes() const;
@@ -66,4 +66,4 @@ signals:
     void classesChanged(const QString &);
 };
 
-#endif // QQUICKMAPBOXGLSTYLEPROPERTY_H
+#endif // QQUICKMAPBOXGLPROPERTY_H

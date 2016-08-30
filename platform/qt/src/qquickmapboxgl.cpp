@@ -3,7 +3,7 @@
 #include <mbgl/util/constants.hpp>
 
 #include <QQuickMapboxGL>
-#include <QQuickMapboxGLStyleProperty>
+#include <QQuickMapboxGLProperty>
 
 #include <QDebug>
 #include <QQuickItem>
@@ -160,11 +160,11 @@ void QQuickMapboxGL::setColor(const QColor &color)
     m_color = color;
 
     QVariantMap paintProperty;
-    paintProperty["type"] = QQuickMapboxGLLayoutStyleProperty::PaintType;
+    paintProperty["type"] = QQuickMapboxGLLayoutProperty::PaintType;
     paintProperty["layer"] = "background";
     paintProperty["property"] = "background-color";
     paintProperty["value"] = color;
-    onStylePropertyUpdated(paintProperty);
+    onPropertyUpdated(paintProperty);
 
     emit colorChanged(m_color);
 }
@@ -189,13 +189,13 @@ void QQuickMapboxGL::setStyle(QQuickMapboxGLStyle *style)
     }
 
     disconnect(style, SIGNAL(urlChanged(QString)), this, SLOT(onStyleChanged()));
-    disconnect(style, SIGNAL(propertyUpdated(QVariantMap)), this, SLOT(onStylePropertyUpdated(QVariantMap)));
+    disconnect(style, SIGNAL(propertyUpdated(QVariantMap)), this, SLOT(onPropertyUpdated(QVariantMap)));
     delete m_style;
     m_style = style;
     if (style) {
         style->setParentItem(this);
         connect(style, SIGNAL(urlChanged(QString)), this, SLOT(onStyleChanged()));
-        connect(style, SIGNAL(propertyUpdated(QVariantMap)), this, SLOT(onStylePropertyUpdated(QVariantMap)));
+        connect(style, SIGNAL(propertyUpdated(QVariantMap)), this, SLOT(onPropertyUpdated(QVariantMap)));
     }
 
     m_syncState |= StyleNeedsSync;
@@ -294,14 +294,14 @@ void QQuickMapboxGL::itemChange(QQuickItem::ItemChange change, const QQuickItem:
 
     switch (change) {
     case QQuickItem::ItemChildAddedChange:
-        if (QQuickMapboxGLStyleProperty *property = qobject_cast<QQuickMapboxGLStyleProperty *>(value.item)) {
-            connect(property, SIGNAL(updated(QVariantMap)), this, SLOT(onStylePropertyUpdated(QVariantMap)));
+        if (QQuickMapboxGLProperty *property = qobject_cast<QQuickMapboxGLProperty *>(value.item)) {
+            connect(property, SIGNAL(updated(QVariantMap)), this, SLOT(onPropertyUpdated(QVariantMap)));
             connect(this, SIGNAL(styleChanged()), property, SLOT(checkUpdated()));
         }
         break;
     case QQuickItem::ItemChildRemovedChange:
-        if (QQuickMapboxGLStyleProperty *property = qobject_cast<QQuickMapboxGLStyleProperty *>(value.item)) {
-            disconnect(property, SIGNAL(updated(QVariantMap)), this, SLOT(onStylePropertyUpdated(QVariantMap)));
+        if (QQuickMapboxGLProperty *property = qobject_cast<QQuickMapboxGLProperty *>(value.item)) {
+            disconnect(property, SIGNAL(updated(QVariantMap)), this, SLOT(onPropertyUpdated(QVariantMap)));
             disconnect(this, SIGNAL(styleChanged()), property, SLOT(checkUpdated()));
         }
     default:
@@ -309,13 +309,13 @@ void QQuickMapboxGL::itemChange(QQuickItem::ItemChange change, const QQuickItem:
     }
 }
 
-void QQuickMapboxGL::onStylePropertyUpdated(const QVariantMap &params)
+void QQuickMapboxGL::onPropertyUpdated(const QVariantMap &params)
 {
     switch (params.value("type").toInt()) {
-    case QQuickMapboxGLStyleProperty::LayoutType:
+    case QQuickMapboxGLProperty::LayoutType:
         m_layoutChanges << params;
         break;
-    case QQuickMapboxGLStyleProperty::PaintType:
+    case QQuickMapboxGLProperty::PaintType:
         m_paintChanges << params;
         break;
     }

@@ -25,21 +25,21 @@ ApplicationWindow {
         onCurrentColorChanged: { waterColor.value = currentColor }
     }
 
-    MapboxLayoutStyleProperty {
+    MapboxLayoutProperty {
         parent: styleStreets
         layer: "road-label-large"
         property: "visibility"
         value: roadLabel.checked ? "visible" : "none"
     }
 
-    MapboxLayoutStyleProperty {
+    MapboxLayoutProperty {
         parent: styleStreets
         layer: "road-label-medium"
         property: "visibility"
         value: roadLabel.checked ? "visible" : "none"
     }
 
-    MapboxLayoutStyleProperty {
+    MapboxLayoutProperty {
         parent: styleStreets
         layer: "road-label-small"
         property: "visibility"
@@ -93,7 +93,7 @@ ApplicationWindow {
                     color: landColorDialog.color
                     copyrightsVisible: true
 
-                    MapboxPaintStyleProperty {
+                    MapboxPaintProperty {
                         id: waterColor
                         layer: "water"
                         property: "fill-color"
