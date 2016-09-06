@@ -44,7 +44,7 @@ std::unique_ptr<Bucket> SymbolLayer::Impl::createBucket(BucketParameters& parame
         } else {
             bucket->layout.iconRotationAlignment.value = AlignmentType::Viewport;
         }
-    };
+    }
 
     bucket->layout.textRotationAlignment.calculate(p);
     if (bucket->layout.textRotationAlignment.value == AlignmentType::Undefined) {
@@ -53,13 +53,13 @@ std::unique_ptr<Bucket> SymbolLayer::Impl::createBucket(BucketParameters& parame
         } else {
             bucket->layout.textRotationAlignment.value = AlignmentType::Viewport;
         }
-    };
+    }
 
     // If unspecified `text-pitch-alignment` inherits `text-rotation-alignment`
     bucket->layout.textPitchAlignment.calculate(p);
     if (bucket->layout.textPitchAlignment.value == AlignmentType::Undefined) {
         bucket->layout.textPitchAlignment.value = bucket->layout.textRotationAlignment.value;
-    };
+    }
 
     bucket->layout.recalculate(p);
 
