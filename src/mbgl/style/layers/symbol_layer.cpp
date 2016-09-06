@@ -125,7 +125,7 @@ void SymbolLayer::setIconOptional(PropertyValue<bool> value) {
     impl->layout.iconOptional.set(value);
 }
 PropertyValue<AlignmentType> SymbolLayer::getDefaultIconRotationAlignment() {
-    return { AlignmentType::Viewport };
+    return { AlignmentType::Undefined };
 }
 
 PropertyValue<AlignmentType> SymbolLayer::getIconRotationAlignment() const {
@@ -235,7 +235,7 @@ void SymbolLayer::setTextPitchAlignment(PropertyValue<AlignmentType> value) {
     impl->layout.textPitchAlignment.set(value);
 }
 PropertyValue<AlignmentType> SymbolLayer::getDefaultTextRotationAlignment() {
-    return { AlignmentType::Viewport };
+    return { AlignmentType::Undefined };
 }
 
 PropertyValue<AlignmentType> SymbolLayer::getTextRotationAlignment() const {

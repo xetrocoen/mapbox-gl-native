@@ -36,12 +36,27 @@ std::unique_ptr<Bucket> SymbolLayer::Impl::createBucket(BucketParameters& parame
 
     CalculationParameters p(parameters.tileID.overscaledZ);
     bucket->layout.symbolPlacement.calculate(p);
-    if (bucket->layout.symbolPlacement.value == SymbolPlacementType::Line) {
-        bucket->layout.iconRotationAlignment.value = AlignmentType::Map;
-        bucket->layout.textRotationAlignment.value = AlignmentType::Map;
+
+    bucket->layout.iconRotationAlignment.calculate(p);
+    if (bucket->layout.iconRotationAlignment.value == AlignmentType::Undefined) {
+        if (bucket->layout.symbolPlacement.value == SymbolPlacementType::Line) {
+            bucket->layout.iconRotationAlignment.value = AlignmentType::Map;
+        } else {
+            bucket->layout.iconRotationAlignment.value = AlignmentType::Viewport;
+        }
+    };
+
+    bucket->layout.textRotationAlignment.calculate(p);
+    if (bucket->layout.textRotationAlignment.value == AlignmentType::Undefined) {
+        if (bucket->layout.symbolPlacement.value == SymbolPlacementType::Line) {
+            bucket->layout.textRotationAlignment.value = AlignmentType::Map;
+        } else {
+            bucket->layout.textRotationAlignment.value = AlignmentType::Viewport;
+        }
     };
 
     // If unspecified `text-pitch-alignment` inherits `text-rotation-alignment`
+    bucket->layout.textPitchAlignment.calculate(p);
     if (bucket->layout.textPitchAlignment.value == AlignmentType::Undefined) {
         bucket->layout.textPitchAlignment.value = bucket->layout.textRotationAlignment.value;
     };
