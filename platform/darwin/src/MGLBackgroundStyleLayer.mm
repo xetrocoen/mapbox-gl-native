@@ -13,6 +13,7 @@
 @property (nonatomic) mbgl::style::BackgroundLayer *layer;
 @property (nonatomic, readwrite) NSString *layerIdentifier;
 @property (nonatomic, readwrite) NSString *sourceIdentifier;
+@property (nonatomic, readwrite) NSString *sourceLayerIdentifier;
 
 @end
 
@@ -20,7 +21,17 @@
 
 @synthesize mapView;
 
-- (instancetype)initWithLayerIdentifier:(NSString *)layerIdentifier sourceIdentifier:(NSString *)sourceIdentifier {
+- (instancetype)initWithLayerIdentifier:(NSString *)layerIdentifier
+{
+    if (self = [super init]) {
+        _layerIdentifier = layerIdentifier;
+        _layer = new mbgl::style::BackgroundLayer(layerIdentifier.UTF8String);
+    }
+    return self;
+}
+
+- (instancetype)initWithLayerIdentifier:(NSString *)layerIdentifier sourceIdentifier:(NSString *)sourceIdentifier
+{
     if (self = [super init]) {
         _layerIdentifier = layerIdentifier;
         _sourceIdentifier = sourceIdentifier;
@@ -28,6 +39,7 @@
     }
     return self;
 }
+
 
 #pragma mark - Accessing the Paint Attributes
 

@@ -69,6 +69,11 @@ typedef NS_ENUM(NSUInteger, MGLSymbolStyleLayerTextTranslateAnchor) {
 
 @interface MGLSymbolStyleLayer : MGLBaseStyleLayer <MGLStyleLayer>
 
+
+- (instancetype)initWithLayerIdentifier:(NSString *)layerIdentifier sourceIdentifier:(NSString *)sourceIdentifier;
+
+- (instancetype)initWithLayerIdentifier:(NSString *)layerIdentifier sourceIdentifier:(NSString *)sourceIdentifier sourceLayer:(NSString *)sourceLayer;
+
 /**
  A predicate that corresponds to the layer's <a href='https://www.mapbox.com/mapbox-gl-style-spec/#types-filter'>filter</a>.
  

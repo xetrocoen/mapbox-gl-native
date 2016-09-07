@@ -13,6 +13,7 @@
 @property (nonatomic) mbgl::style::LineLayer *layer;
 @property (nonatomic, readwrite) NSString *layerIdentifier;
 @property (nonatomic, readwrite) NSString *sourceIdentifier;
+@property (nonatomic, readwrite) NSString *sourceLayerIdentifier;
 
 @end
 
@@ -20,11 +21,24 @@
 
 @synthesize mapView;
 
-- (instancetype)initWithLayerIdentifier:(NSString *)layerIdentifier sourceIdentifier:(NSString *)sourceIdentifier {
+
+- (instancetype)initWithLayerIdentifier:(NSString *)layerIdentifier sourceIdentifier:(NSString *)sourceIdentifier
+{
     if (self = [super init]) {
         _layerIdentifier = layerIdentifier;
         _sourceIdentifier = sourceIdentifier;
         _layer = new mbgl::style::LineLayer(layerIdentifier.UTF8String, sourceIdentifier.UTF8String);
+    }
+    return self;
+}
+
+- (instancetype)initWithLayerIdentifier:(NSString *)layerIdentifier sourceIdentifier:(NSString *)sourceIdentifier sourceLayer:(NSString *)sourceLayer
+{
+    if (self = [super init]) {
+        _layerIdentifier = layerIdentifier;
+        _sourceIdentifier = sourceIdentifier;
+        _layer = new mbgl::style::LineLayer(layerIdentifier.UTF8String, sourceIdentifier.UTF8String);
+		_layer->setSourceLayer(sourceLayer.UTF8String);
     }
     return self;
 }

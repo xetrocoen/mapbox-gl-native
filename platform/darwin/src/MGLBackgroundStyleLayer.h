@@ -8,6 +8,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface MGLBackgroundStyleLayer : MGLBaseStyleLayer <MGLStyleLayer>
 
+- (instancetype)initWithLayerIdentifier:(NSString *)layerIdentifier;
+
+- (instancetype)initWithLayerIdentifier:(NSString *)layerIdentifier sourceIdentifier:(NSString *)sourceIdentifier;
+
+
 #pragma mark - Accessing the Paint Attributes
 
 #if TARGET_OS_IPHONE
