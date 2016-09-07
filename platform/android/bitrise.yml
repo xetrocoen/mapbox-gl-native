@@ -39,11 +39,11 @@ workflows:
             curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
             sudo apt-get install -y pkg-config nodejs cmake
             export BUILDTYPE=Release
-            make android
-            make android-test
+            make android-lib-arm-v7
             make android-generate-test
             wget -O platform/android/MapboxGLAndroidSDKTestApp/src/main/res/values/developer-config.xml "$BITRISEIO_TEST_ACCESS_TOKEN_UI_TEST_URL"
             make android-test-apk
+            make android-test
             cd platform/android/MapboxGLAndroidSDKTestApp/build/outputs/apk
             wget -O secret.json "$BITRISEIO_GCLOUD_SERVICE_ACCOUNT_JSON_URL"
             export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)"
