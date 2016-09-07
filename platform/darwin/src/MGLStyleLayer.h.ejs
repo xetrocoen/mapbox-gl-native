@@ -39,10 +39,10 @@ typedef NS_ENUM(NSUInteger, MGL<%- camelize(type) %>StyleLayer<%- camelize(prope
 - (instancetype)initWithLayerIdentifier:(NSString *)layerIdentifier;
 <% } -%>
 
-- (instancetype)initWithLayerIdentifier:(NSString *)layerIdentifier sourceIdentifier:(NSString *)sourceIdentifier;
+- (instancetype)initWithLayerIdentifier:(NSString *)layerIdentifier source:(MGLSource *)source;
 
 <% if (type !== 'background' && type !== 'raster') { -%>
-- (instancetype)initWithLayerIdentifier:(NSString *)layerIdentifier sourceIdentifier:(NSString *)sourceIdentifier sourceLayer:(NSString *)sourceLayer;
+- (instancetype)initWithLayerIdentifier:(NSString *)layerIdentifier source:(MGLSource *)source sourceLayer:(NSString *)sourceLayer;
 <% } -%>
 
 <% if (type !== 'background' && type !== 'raster') { -%>

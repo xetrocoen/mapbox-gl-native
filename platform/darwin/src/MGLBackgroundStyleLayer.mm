@@ -1,6 +1,7 @@
 // This file is generated. 
 // Edit platform/darwin/scripts/generate-style-code.js, then run `make style-code-darwin`.
 
+#import "MGLSource.h"
 #import "NSPredicate+MGLAdditions.h"
 #import "MGLStyleLayer_Private.h"
 #import "MGLStyleAttributeValue.h"
@@ -30,11 +31,11 @@
     return self;
 }
 
-- (instancetype)initWithLayerIdentifier:(NSString *)layerIdentifier sourceIdentifier:(NSString *)sourceIdentifier
+- (instancetype)initWithLayerIdentifier:(NSString *)layerIdentifier source:(MGLSource *)source
 {
     if (self = [super init]) {
         _layerIdentifier = layerIdentifier;
-        _sourceIdentifier = sourceIdentifier;
+        _sourceIdentifier = source.sourceIdentifier;
         _layer = new mbgl::style::BackgroundLayer(layerIdentifier.UTF8String);
     }
     return self;

@@ -195,12 +195,16 @@ global.initLayer = function (layerType) {
     if (layerType == "background") {
        return `_layer = new mbgl::style::${camelize(layerType)}Layer(layerIdentifier.UTF8String);` 
     } else {
-        return `_layer = new mbgl::style::${camelize(layerType)}Layer(layerIdentifier.UTF8String, sourceIdentifier.UTF8String);`
+        return `_layer = new mbgl::style::${camelize(layerType)}Layer(layerIdentifier.UTF8String, source.sourceIdentifier.UTF8String);`
     }
 }
 
 global.initLayerWithSourceLayer = function(layerType) {
-    return `_layer = new mbgl::style::${camelize(layerType)}Layer(layerIdentifier.UTF8String, sourceIdentifier.UTF8String);\n\t\t_layer->setSourceLayer(sourceLayer.UTF8String);`  
+    return `_layer = new mbgl::style::${camelize(layerType)}Layer(layerIdentifier.UTF8String, source.sourceIdentifier.UTF8String);`  
+}
+
+global.setSourceLayer = function() {
+   return `_layer->setSourceLayer(sourceLayer.UTF8String);`
 }
 
 global.setterImplementation = function(property, layerType) {

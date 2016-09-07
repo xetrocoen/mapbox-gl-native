@@ -1,6 +1,7 @@
 // This file is generated. 
 // Edit platform/darwin/scripts/generate-style-code.js, then run `make style-code-darwin`.
 
+#import "MGLSource.h"
 #import "NSPredicate+MGLAdditions.h"
 #import "MGLStyleLayer_Private.h"
 #import "MGLStyleAttributeValue.h"
@@ -22,23 +23,23 @@
 @synthesize mapView;
 
 
-- (instancetype)initWithLayerIdentifier:(NSString *)layerIdentifier sourceIdentifier:(NSString *)sourceIdentifier
+- (instancetype)initWithLayerIdentifier:(NSString *)layerIdentifier source:(MGLSource *)source
 {
     if (self = [super init]) {
         _layerIdentifier = layerIdentifier;
-        _sourceIdentifier = sourceIdentifier;
-        _layer = new mbgl::style::FillLayer(layerIdentifier.UTF8String, sourceIdentifier.UTF8String);
+        _sourceIdentifier = source.sourceIdentifier;
+        _layer = new mbgl::style::FillLayer(layerIdentifier.UTF8String, source.sourceIdentifier.UTF8String);
     }
     return self;
 }
 
-- (instancetype)initWithLayerIdentifier:(NSString *)layerIdentifier sourceIdentifier:(NSString *)sourceIdentifier sourceLayer:(NSString *)sourceLayer
+- (instancetype)initWithLayerIdentifier:(NSString *)layerIdentifier source:(MGLSource *)source sourceLayer:(NSString *)sourceLayer
 {
     if (self = [super init]) {
         _layerIdentifier = layerIdentifier;
-        _sourceIdentifier = sourceIdentifier;
-        _layer = new mbgl::style::FillLayer(layerIdentifier.UTF8String, sourceIdentifier.UTF8String);
-		_layer->setSourceLayer(sourceLayer.UTF8String);
+        _sourceIdentifier = source.sourceIdentifier;
+        _layer = new mbgl::style::FillLayer(layerIdentifier.UTF8String, source.sourceIdentifier.UTF8String);
+        _layer->setSourceLayer(sourceLayer.UTF8String);
     }
     return self;
 }
