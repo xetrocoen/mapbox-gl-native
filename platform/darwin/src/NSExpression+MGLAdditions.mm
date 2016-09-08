@@ -27,12 +27,37 @@
         return { std::string([(NSString *)value UTF8String]) };
     } else if ([value isKindOfClass:NSNumber.class]) {
         NSNumber *number = (NSNumber *)value;
-        if((strcmp([number objCType], @encode(int))) == 0) {
+        // handle all types defined in NSNumber designated initializers
+        if (strcmp([number objCType], @encode(char)) == 0) {
+            return { number.charValue };
+        } else if (strcmp([number objCType], @encode(unsigned char)) == 0) {
+            return { number.unsignedCharValue };
+        } else if (strcmp([number objCType], @encode(short)) == 0) {
+            return { number.shortValue };
+        } else if (strcmp([number objCType], @encode(unsigned short)) == 0) {
+            return { number.unsignedShortValue };
+        } else if (strcmp([number objCType], @encode(int)) == 0) {
             return { number.intValue };
-        } else if ((strcmp([number objCType], @encode(double))) == 0) {
+        } else if (strcmp([number objCType], @encode(unsigned int)) == 0) {
+            return { number.unsignedIntValue };
+        } else if (strcmp([number objCType], @encode(long)) == 0) {
+            return { number.longValue };
+        } else if (strcmp([number objCType], @encode(unsigned long)) == 0) {
+            return { number.unsignedLongValue };
+        } else if (strcmp([number objCType], @encode(long long)) == 0) {
+            return { number.longLongValue };
+        } else if (strcmp([number objCType], @encode(unsigned long long)) == 0) {
+            return { number.unsignedLongLongValue };
+        } else if (strcmp([number objCType], @encode(float)) == 0) {
+            return { number.floatValue };
+        } else if (strcmp([number objCType], @encode(double)) == 0) {
             return { number.doubleValue };
-        } else if ((strcmp([number objCType], @encode(char))) == 0) {
+        } else if (strcmp([number objCType], @encode(bool)) == 0) {
             return { number.boolValue };
+        } else if (strcmp([number objCType], @encode(NSInteger)) == 0) {
+            return { number.integerValue };
+        } else if (strcmp([number objCType], @encode(NSUInteger)) == 0) {
+            return { number.unsignedIntegerValue };
         }
     }
     [NSException raise:@"Value not handled"
